@@ -1,5 +1,7 @@
 # NextJSAppTemplate
 
+![Example](./docs/NextJSAppTemplate.png)
+
 Here is an opinionated template for a NextJS application to make a web and mobile solution within a single codebase.
 
 ## Tech Stack
@@ -83,37 +85,47 @@ We have created dev-purpose accounts to test student and teacher session. Additi
 | user2@example.com | password123   |
 | user3@example.com | password123   |
 
-# Capacitor
+# Capacitor - Mobile
 
 For mobile deployment, we are using NextJS bundled by Capacitor. Below are the instructions to make this system work.
 
+> [!WARNING]
+> Mobile Development only works in networks that allow device-to-device communication. It's likely that school networks will restrict this type of network traffic. A way to test is by trying to access the NextJS dev server via your phone. If that works, then Capacitor will also work.
+
 ## iOS
 
-For iOS development, you will need a computer that runs on macOS, such as a MacBook Air or Pro.
+For iOS development, you will need a computer that runs on macOS, such as a MacBook Air or Pro. Additionally, you will need to install Xcode to be able to run an iPhone emulator. [Follow the instruction found here to install Xcode](https://developer.apple.com/documentation/safari-developer-tools/installing-xcode-and-simulators).
 
 ### Dependencies
-1. Install CocoaPods (required for the workspace/schemes)
+
+Install CocoaPods (required for the workspace/schemes)
 ```
 sudo gem install cocoapods
 pod setup
 ```
-2. Ensure Pods generate the workspace
+
+Ensure Pods generate the workspace
 ```
 cd ios
 pod install
 cd ..
 ```
+
 If pod install errors, fix Ruby/CocoaPods until it’s clean.
-3. Sync Capacitor (copy assets + config)
+
+### Sync and Run iOS App
+If you change the capacitor setup, you will need to sync Capacitor (copy assets + config) via:
 ```
 export CAP_SERVER_URL="http://<YOUR-LAN-IP>:3000"   # e.g. http://192.168.1.50:3000
 npx cap sync ios
 ```
-4. Open the workspace and run
+
+After syncing (if needed), you can open the workspace and run the application via the following command:
 ```
 npx cap open ios
 ```
-In Xcode:
+
+Within the Xcode IDE, you might need to configure the following:
 
 Make sure you opened ``ios/App/App.xcworkspace`` (not the .xcodeproj).
 * Show the Project Navigator (⌘1). You should see App and Pods.
@@ -123,6 +135,27 @@ Make sure you opened ``ios/App/App.xcworkspace`` (not the .xcodeproj).
 
 If the scheme menu is still weird: Product → Scheme → Manage Schemes… and ensure App exists and is checked “Shared”.
 
+After this one-time setup, you should be able to simply press the run ▶ button.
+
 ## Android
 
-Documentation coming soon...
+For Android, any operating system (MacOS, Linux, and Windows) that supports Android Studio should work. [Install Android Studio using the following guide](https://developer.android.com/studio?gclsrc=aw.ds&gad_source=1&gad_campaignid=21831783525&gbraid=0AAAAAC-IOZmukinfOZWCPtxydlf4EB01u&gclid=Cj0KCQjw267GBhCSARIsAOjVJ4FzyfG7UfuWL4Up_EG4wbBu1HDklr1S_YHjvkprsdJb9MiY1UF-YjIaAsxAEALw_wcB).
+
+### Dependencies 
+
+Make sure to install a phone emulator via the Android Studio IDE before trying to run the Capacitor app.
+
+### Sync and Run Android App
+
+If you change the capacitor setup, you will need to sync Capacitor (copy assets + config) via:
+```
+export CAP_SERVER_URL="http://<YOUR-LAN-IP>:3000"   # e.g. http://192.168.1.50:3000
+npx cap sync android
+```
+
+After syncing (if needed), you can open the workspace and run the application via the following command:
+```
+npx cap open android
+```
+
+Within the Android Studio, you should be able to directly press a play button ▶ to start the Android app on a the phone emulator.

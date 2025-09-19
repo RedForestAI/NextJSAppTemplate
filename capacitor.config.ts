@@ -5,12 +5,12 @@ import type { CapacitorConfig } from '@capacitor/cli';
 const devUrl = process.env.CAP_SERVER_URL;
 
 const config: CapacitorConfig = {
-  appId: 'com.redforest.redforest',
-  appName: 'RedForest',
+  appId: 'com.placeholder.app',
+  appName: 'PlaceHolder',
   webDir: 'public',
-  server: "http://10.120.244.109:3000"
+  server: "http://192.168.1.199:3000"
     ? {
-        url: "http://10.120.244.109:3000",           // ex: "http://192.168.1.50:3000"
+        url: "http://192.168.1.199:3000",           // ex: "http://192.168.1.50:3000"
         cleartext: true,       // needed for http in dev (Android); harmless on iOS
         allowNavigation: ["*"] // or ["your-domain.com", "127.0.0.1", "192.168.1.0/24"]
       }
