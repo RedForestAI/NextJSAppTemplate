@@ -1,18 +1,6 @@
-enum Role {
-  ADMIN
-  STUDENT
-  TEACHER
-  PARENT
-  RESEARCHER
-}
-
 model Profile {
   id                String      @id @db.Uuid
   name              String      @default("")
-  firstName         String      @default("")
-  lastName          String      @default("")
-  avatarUrl         String?
-  avatarUrlUpdatedAt String?
 
   @@map("profile")
 }

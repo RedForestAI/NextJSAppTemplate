@@ -2,15 +2,11 @@
 
 import { useEffect } from 'react';
 import { useRouter } from "next/navigation";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye, faEyeSlash, faCheck } from '@fortawesome/free-solid-svg-icons';
+import { Check } from "lucide-react";
 
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { createClient } from '~/utils/supabase/client';
-import ReCAPTCHA from "react-google-recaptcha";
-
-import { Role } from '@prisma/client';
 
 import {
   Card,
@@ -28,18 +24,12 @@ import { Checkbox } from '~/components/ui/checkbox';
 import { toast } from "sonner";
 import { trpc } from '~/server/api/client';
 
-type RegisterFormProps = {
-  role: Role
-}
-
 function capitalizeFirstLetter(val) {
     return String(val).charAt(0).toUpperCase() + String(val).slice(1).toLowerCase();
 }
 
-export default function RegisterForm(props: RegisterFormProps) {
-  const recaptchaRef = React.useRef<ReCAPTCHA>(null);
-  const [firstName, setFirstName] = useState<string>('');
-  const [lastName, setLastName] = useState<string>('');
+export default function RegisterForm() {
+  const [name, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
@@ -60,7 +50,7 @@ export default function RegisterForm(props: RegisterFormProps) {
     e.preventDefault()
 
     // Check that names, email, and password are filled out
-    if (!email || !password || !firstName || !lastName || !confirmPassword) {
+    if (!email || !password || !name || !confirmPassword) {
       toast.error("Please fill out all fields.");
       return;
     }
@@ -91,15 +81,6 @@ export default function RegisterForm(props: RegisterFormProps) {
       return;
     }
 
-    // Only in production, check reCAPTCHA
-    if (process.env.NODE_ENV === 'production' && recaptchaRef.current) {
-      const recaptchaValue = recaptchaRef.current.getValue();
-      if (!recaptchaValue) {
-        toast.error("Please complete the CAPTCHA.");
-        return;
-      }
-    }
-
     const { data, error } = await supabase.auth.signUp({
       email: email,
       password: password,
@@ -115,10 +96,7 @@ export default function RegisterForm(props: RegisterFormProps) {
       // Update the profile with first and last name
       await profileUpdate.mutateAsync({
         profileId: data.user?.id || "",
-        name: `${firstName} ${lastName}`,
-        firstName: firstName,
-        lastName: lastName,
-        role: props.role
+        name: name || "",
       });
       setRegistered(true);
       toast.success("Registration successful! Please check your email for further instructions.");
@@ -130,7 +108,7 @@ export default function RegisterForm(props: RegisterFormProps) {
       { registered && (
         <div className="flex justify-center items-center h-[60vh] md:h-[90vh]">
           <div className="flex flex-col items-center">
-            <FontAwesomeIcon icon={faCheck} className="text-6xl text-green-500 mb-12" />
+            <Check className="h-4 w-4" />
             <span>Registration successful! Please check your email for further instructions.</span>
 
             <Button
@@ -148,30 +126,21 @@ export default function RegisterForm(props: RegisterFormProps) {
         <div className="flex justify-center items-center h-[60vh] md:h-[90vh]">
           <Card className="w-full max-w-sm">
             <CardHeader>
-              <CardTitle>Create your {capitalizeFirstLetter(props.role)} Account</CardTitle>
+              <CardTitle>Create your Account</CardTitle>
               <CardDescription>
                 Please fill out the form below to create your account.
               </CardDescription>
             </CardHeader>
             <CardContent>
               <form>
-                {/* First name */}
-                <Label htmlFor="first-name" className="mb-2 text-sm">First Name</Label>
+                {/* Name */}
+                <Label htmlFor="name" className="mb-2 text-sm">Name</Label>
                 <Input
                   type="text"
-                  id="first-name"
-                  placeholder="John"
-                  onChange={(e) => setFirstName(e.target.value)}
+                  id="name"
+                  placeholder="John Doe"
+                  onChange={(e) => setName(e.target.value)}
                   className="mb-4"
-                />
-
-                {/* Last name */}
-                <Label htmlFor="last-name" className="mb-2 text-sm">Last Name</Label>
-                <Input
-                  type="text"
-                  id="last-name"
-                  placeholder="Doe"
-                  onChange={(e) => setLastName(e.target.value)}
                 />
 
                 {/* Email */}
@@ -213,15 +182,6 @@ export default function RegisterForm(props: RegisterFormProps) {
                     I agree to the <Link href="/policies/terms" className="text-primary hover:underline">Terms of Use</Link> and <Link href="/policies/privacy" className="text-primary hover:underline">Privacy Policy</Link>
                   </Label>
                 </div>
-
-                {/* mCAPTCHA - only in production */}
-                {process.env.NODE_ENV === 'production' &&
-                  <ReCAPTCHA
-                    ref={recaptchaRef}
-                    sitekey={process.env.NEXT_PUBLIC_CAPTCHA_KEY}
-                    onChange={onChange}
-                  />
-                }
               </form>
             </CardContent>
             <CardFooter className="flex-col gap-2">

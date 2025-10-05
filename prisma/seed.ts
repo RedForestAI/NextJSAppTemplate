@@ -33,13 +33,11 @@ function generateUUID() {
 const getProfiles = (): Prisma.ProfileCreateInput[] => [
   { 
     id: "00000000-0000-0000-0000-000000000001", 
-    firstName: "John",
-    lastName: "Doe",
+    name: "John Doe",
   },
   { 
     id: "00000000-0000-0000-0000-000000000002", 
-    firstName: "Jane",
-    lastName: "Doe", 
+    name: "Jane Doe",
   },
 ];
 
